@@ -1,0 +1,46 @@
+---
+- name: check for installation of psutil
+  become: yes
+  stat:
+    path: "/usr/share/python/{{ gtk_psutil_fullname }}"
+  changed_when: false
+  register: psutil_dir
+
+- when: not psutil_dir.stat.exists
+  block:
+    - name: download...
+      become: yes
+      get_url:
+        url: 'https://github.com/giampaolo/psutil/archive/release-5.4.3.tar.gz'
+        dest: "/tmp/{{ gtk_psutil_tgz }}"
+        checksum: "{{ gtk_psutil_checksum }}"
+        mode: 0644
+
+    - name: make install dir
+      become: yes
+      file:
+        path: '/usr/share/python'
+        state: directory
+        mode: 0755
+
+    - name: unarchive
+      become: yes
+      unarchive:
+        copy: no
+        src: "/tmp/{{ gtk_psutil_tgz }}"
+        dest: '/usr/share/python'
+        creates: "/usr/share/python/{{ gtk_psutil_fullname }}"
+
+    - name: compile psutil
+      become: yes
+      shell: sudo python setup.py install
+      args:
+        chdir: "/usr/share/python/{{ gtk_psutil_fullname }}"
+        executable: /bin/bash
+
+  always:
+    - name: cleanup...
+      become: yes
+      file:
+        path: "/tmp/{{ gtk_psutil_tgz }}"
+        state: absent

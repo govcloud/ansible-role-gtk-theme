@@ -2,5 +2,11 @@
 gtk_theme_tgz: '{{gtk_theme_name}}.tar.gz'
 gtk_theme_checksum: '{{gtk_theme_checksums[gtk_theme_ver][gtk_theme_platform]}}'
 
+gtk_icon_tgz: '{{gtk_icon_name}}.tar.gz'
+gtk_icon_checksum: '{{gtk_icon_checksums[gtk_icon_ver][gtk_icon_platform]}}'
+
 gtk_extension_tgz: '{{gtk_extension_name}}.tar.gz'
 gtk_extension_checksum: '{{gtk_extension_checksums[gtk_extension_ver][gtk_extension_platform]}}'
+
+gtk_psutil_tgz: '{{gtk_psutil_name}}.tar.gz'
+gtk_psutil_checksum: '{{gtk_psutil_checksums[gtk_psutil_ver][gtk_psutil_platform]}}'

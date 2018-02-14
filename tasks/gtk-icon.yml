@@ -1,0 +1,40 @@
+---
+- name: check for installation of ARC icons
+  become: yes
+  stat:
+    path: "/usr/share/icons/{{ gtk_icon_name }}"
+  changed_when: false
+  register: arc_icon_dir
+
+- when: not arc_icon_dir.stat.exists
+  block:
+    - name: download...
+      become: yes
+      get_url:
+        url: 'https://github.com/LinxGem33/Arc-OSX-Icons/archive/v2.1.tar.gz'
+        dest: "/tmp/{{ gtk_icon_tgz }}"
+        checksum: "{{ gtk_icon_checksum }}"
+        mode: 0644
+
+    - name: make install dir
+      become: yes
+      file:
+        path: '/usr/share/icons'
+        state: directory
+        mode: 0755
+
+    - name: unarchive
+      become: yes
+      unarchive:
+        extra_opts: ['--strip-components=2']
+        copy: no
+        src: "/tmp/{{ gtk_icon_tgz }}"
+        dest: '/usr/share/icons'
+        creates: "/usr/share/icons/{{ gtk_icon_name }}"
+
+  always:
+    - name: cleanup...
+      become: yes
+      file:
+        path: "/tmp/{{ gtk_icon_tgz }}"
+        state: absent

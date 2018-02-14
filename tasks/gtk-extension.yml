@@ -1,0 +1,50 @@
+---
+- name: check for installation of extension Dash to Dock
+  become: yes
+  stat:
+    path: "/usr/share/gnome-shell/extensions/{{ gtk_extension_uuid }}"
+  changed_when: false
+  register: dash_dock_dir
+
+- when: not dash_dock_dir.stat.exists
+  block:
+    - name: download...
+      become: yes
+      get_url:
+        url: 'https://github.com/micheleg/dash-to-dock/archive/extensions.gnome.org-v62.tar.gz'
+        checksum: "{{ gtk_extension_checksum }}"
+        dest: "/tmp/{{ gtk_extension_tgz }}"
+        mode: 0644
+
+    - name: make install dir
+      become: yes
+      file:
+        path: '/usr/share/gnome-shell/extensions'
+        state: directory
+        mode: 0755
+
+    - name: unarchive
+      become: yes
+      unarchive:
+        copy: no
+        src: "/tmp/{{ gtk_extension_tgz }}"
+        dest: '/usr/share/gnome-shell/extensions'
+        creates: "/usr/share/gnome-shell/extensions/{{ gtk_extension_uuid }}"
+
+    - name: Move dock to correct dir
+      become: yes
+      command: "mv /usr/share/gnome-shell/extensions/{{ gtk_extension_fullname }} /usr/share/gnome-shell/extensions/{{ gtk_extension_uuid }}"
+
+    - name: glib compile schema
+      become: yes
+      shell: sudo glib-compile-schemas .
+      args:
+        chdir: "/usr/share/gnome-shell/extensions/{{ gtk_extension_uuid }}/schemas/"
+        executable: /bin/bash
+
+  always:
+    - name: cleanup...
+      become: yes
+      file:
+        dest: "/tmp/{{ gtk_extension_tgz }}"
+        state: absent

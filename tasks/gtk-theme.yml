@@ -1,0 +1,39 @@
+---
+- name: check for installation of ARC theme
+  become: yes
+  stat:
+    path: "/usr/share/themes/{{ gtk_theme_name }}"
+  changed_when: false
+  register: arc_white_dir
+
+- when: not arc_white_dir.stat.exists
+  block:
+    - name: download...
+      become: yes
+      get_url:
+        url: 'https://github.com/LinxGem33/OSX-Arc-White/archive/v1.4.7.tar.gz'
+        dest: "/tmp/{{ gtk_theme_tgz }}"
+        checksum: "{{ gtk_theme_checksum }}"
+        mode: 0644
+
+    - name: make install dir
+      become: yes
+      file:
+        path: '/usr/share/themes'
+        state: directory
+        mode: 0755
+
+    - name: unarchive
+      become: yes
+      unarchive:
+        copy: no
+        src: "/tmp/{{ gtk_theme_tgz }}"
+        dest: '/usr/share/themes'
+        creates: "/usr/share/themes/{{ gtk_theme_name }}"
+
+  always:
+    - name: cleanup...
+      become: yes
+      file:
+        path: "/tmp/{{ gtk_theme_tgz }}"
+        state: absent

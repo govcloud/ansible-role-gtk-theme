@@ -13,5 +13,29 @@
   tags:
     - vars
 
-- include: RedHat.yml
+- name: Install gtk theme deps
+  become: true
+  yum:
+    pkg: "{{ item }}"
+    state: present
+  with_items:
+    - gnome-themes-standard
+    - gtk-murrine-engine
+    - python-devel
+    - python-psutil
+  when: ansible_os_family == 'RedHat'
+
+- include: gtk-psutil.yml
+  when: ansible_os_family == 'RedHat'
+
+- include: gtk-theme.yml
+  when: ansible_os_family == 'RedHat'
+
+- include: gtk-icon.yml
+  when: ansible_os_family == 'RedHat'
+
+- include: gtk-extension.yml
+  when: ansible_os_family == 'RedHat'
+
+- include: gtk-dconf.yml
   when: ansible_os_family == 'RedHat'
