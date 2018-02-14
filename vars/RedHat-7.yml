@@ -1,0 +1,6 @@
+---
+gtk_theme_tgz: '{{gtk_theme_name}}.tar.gz'
+gtk_theme_checksum: '{{gtk_theme_checksums[gtk_theme_ver][gtk_theme_platform]}}'
+
+gtk_extension_tgz: '{{gtk_extension_name}}.tar.gz'
+gtk_extension_checksum: '{{gtk_extension_checksums[gtk_extension_ver][gtk_extension_platform]}}'

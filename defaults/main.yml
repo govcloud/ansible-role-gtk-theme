@@ -1,0 +1,17 @@
+---
+gtk_theme_ver: v1.4.7
+gtk_theme_name: OSX-Arc-White
+gtk_theme_fullname: "{{gtk_theme_name}}-{{gtk_theme_ver}}"
+gtk_theme_platform: linux-amd64
+gtk_theme_checksums:
+  v1.4.7:
+    linux-amd64: sha256:8b5e4f3f06c9bce0a060c18282b5e4b5410e471f864e560031b56ed761da38f5
+
+gtk_extension_ver: v62
+gtk_extension_uuid: dash-to-dock@micxgx.gmail.com
+gtk_extension_name: dash-to-dock-extensions.gnome.org
+gtk_extension_fullname: "{{gtk_extension_name}}-{{gtk_extension_ver}}"
+gtk_extension_platform: linux-amd64
+gtk_extension_checksums:
+  v62:
+    linux-amd64: sha256:b74a89b3988bd7e7bdbbe8427382c3a2d06784bdaf72ea42ae37e5cb3ac26858
