@@ -1,0 +1,201 @@
+---
+- name: Install gtk theme deps
+  become: true
+  yum:
+    pkg: "{{ item }}"
+    state: present
+  with_items:
+    - gnome-themes-standard
+    - gtk-murrine-engine
+    - python-psutil
+
+- name: check for installation of ARC theme
+  become: yes
+  stat:
+    path: '/usr/share/themes/OSX-Arc-White'
+  changed_when: false
+  register: arc_white_dir
+
+- when: not arc_white_dir.stat.exists
+  block:
+    - name: download...
+      become: yes
+      get_url:
+        url: 'https://github.com/LinxGem33/OSX-Arc-White/archive/v1.4.7.tar.gz'
+        dest: /tmp/OSX-Arc-White-1.4.7.tar.gz
+        checksum: 'sha256:8b5e4f3f06c9bce0a060c18282b5e4b5410e471f864e560031b56ed761da38f5'
+        mode: 0644
+
+    - name: make install dir
+      become: yes
+      file:
+        path: '/usr/share/themes'
+        state: directory
+        mode: 0755
+
+    - name: unarchive
+      become: yes
+      unarchive:
+        copy: no
+        src: /tmp/OSX-Arc-White-1.4.7.tar.gz
+        dest: '/usr/share/themes'
+        creates: '/usr/share/themes/OSX-Arc-White'
+
+  always:
+    - name: cleanup...
+      become: yes
+      file:
+        path: /tmp/OSX-Arc-White-1.4.7.tar.gz
+        state: absent
+
+- name: check for installation of extension Dash to Dock
+  become: yes
+  stat:
+    path: '/usr/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com'
+  changed_when: false
+  register: dash_dock_dir
+
+- when: not dash_dock_dir.stat.exists
+  block:
+    - name: download...
+      become: yes
+      get_url:
+        url: 'https://github.com/micheleg/dash-to-dock/archive/extensions.gnome.org-v62.tar.gz'
+        checksum: 'sha256:b74a89b3988bd7e7bdbbe8427382c3a2d06784bdaf72ea42ae37e5cb3ac26858'
+        dest: /tmp/dash-to-dock-extensions.gnome.org-v62.tar.gz
+        mode: 0644
+
+    - name: make install dir
+      become: yes
+      file:
+        path: '/usr/share/gnome-shell/extensions'
+        state: directory
+        mode: 0755
+
+    - name: unarchive
+      become: yes
+      unarchive:
+        copy: no
+        src: /tmp/dash-to-dock-extensions.gnome.org-v62.tar.gz
+        dest: '/usr/share/gnome-shell/extensions'
+        creates: '/usr/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com'
+
+    - name: Move dock to correct dir
+      command: mv /usr/share/gnome-shell/extensions/dash-to-dock-extensions.gnome.org-v62 /usr/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com
+
+    - name: glib compile schema
+      shell: sudo glib-compile-schemas .
+      args:
+        chdir: /usr/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/
+        executable: /bin/bash
+
+  always:
+    - name: cleanup...
+      become: yes
+      file:
+        path: /tmp/dash-to-dock-extensions.gnome.org-v62.tar.gz
+        state: absent
+
+- name: read gnome setting for gnome desktop
+  become: yes
+  become_user: vagrant
+  dconf:
+    key: /org/gnome/desktop/interface/gtk-theme
+    state: read
+
+# gsettings needs access to dbus which is not ran by default when connected over SSH
+# http://askubuntu.com/questions/276509/change-gsettings-without-running-x-and-unity
+- name: set gnome setting for gnome gtk theme
+  become: yes
+  become_user: vagrant
+  dconf:
+    key: /org/gnome/desktop/interface/gtk-theme
+    value: "'OSX-Arc-White'"
+    state: present
+
+- name: set gnome setting for gnome user theme
+  become: yes
+  become_user: vagrant
+  dconf:
+    key: /org/gnome/shell/extensions/user-theme/name
+    value: "'OSX-Arc-White'"
+    state: present
+
+- name: set gnome setting for gnome cursor theme
+  become: yes
+  become_user: vagrant
+  dconf:
+    key: /org/gnome/desktop/interface/cursor-theme
+    value: "'Paper'"
+    state: present
+
+- name: set gnome setting for gnome icon theme
+  become: yes
+  become_user: vagrant
+  dconf:
+    key: /org/gnome/desktop/interface/icon-theme
+    value: "'Arc-OSX-D'"
+    state: present
+
+- name: set gnome setting for gnome fonts
+  become: yes
+  become_user: vagrant
+  dconf:
+    key: /org/gnome/desktop/interface/font-name
+    value: "'Liberation Sans 11'"
+    state: present
+
+- name: set gnome setting for gnome titlebar
+  become: yes
+  become_user: vagrant
+  dconf:
+    key: /org/gnome/desktop/wm/preferences/titlebar-font
+    value: "'Liberation Sans Bold 11'"
+    state: present
+
+- name: set gnome setting for desktop background
+  become: yes
+  become_user: vagrant
+  dconf:
+    key: /org/gnome/desktop/background/picture-uri
+    value: "'file:///usr/share/themes/OSX-Arc-White-1.4.7/extra/mountains.png'"
+    state: present
+
+- name: set gnome setting for extensions
+  become: yes
+  become_user: vagrant
+  dconf:
+    key: /org/gnome/shell/enabled-extensions
+    value: "['user-theme@gnome-shell-extensions.gcampax.github.com', 'dash-to-dock@micxgx.gmail.com']"
+    state: present
+
+- name: set gnome setting for extensions (apply-custom-theme)
+  become: yes
+  become_user: vagrant
+  dconf:
+    key: /org/gnome/shell/extensions/dash-to-dock/apply-custom-theme
+    value: "true"
+    state: present
+
+- name: set gnome setting for extensions (preferred-monitor)
+  become: yes
+  become_user: vagrant
+  dconf:
+    key: /org/gnome/shell/extensions/dash-to-dock/preferred-monitor
+    value: "0"
+    state: present
+
+- name: set gnome setting for extensions (dock-position)
+  become: yes
+  become_user: vagrant
+  dconf:
+    key: /org/gnome/shell/extensions/dash-to-dock/dock-position
+    value: "'LEFT'"
+    state: present
+
+- name: read gnome setting for extensions
+  become: yes
+  become_user: vagrant
+  dconf:
+    key: /org/gnome/shell/enabled-extensions
+    state: read
