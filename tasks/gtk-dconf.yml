@@ -1,4 +1,11 @@
 ---
+- name: RHEL fix for missing dbus-run-session binary
+  become: yes
+  template:
+    src: templates/dbus-run-session.sh.j2
+    dest: /usr/local/bin/dbus-run-session
+    mode: 0755
+
 - name: read gnome setting for gnome desktop
   become: yes
   become_user: "{{ general.user }}"
