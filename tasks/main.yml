@@ -7,7 +7,7 @@
 - block:
     - include_vars: "{{ item }}"
       with_first_found:
-        - "../vars/{{distro}}.yml"
+        - "../vars/RedHat-7.yml"
   rescue:
     - fail: msg="Variables file for distro {{ distro }} were not found."
   tags:
