@@ -107,3 +107,14 @@
   dconf:
     key: /org/gnome/shell/enabled-extensions
     state: read
+
+- name: set global dconf values
+  become: yes
+  template:
+    src: templates/10-local-gtk-settings.j2
+    dest: /etc/dconf/db/local.d/10-local-gtk-settings
+    mode: 0755
+
+- name: update dconf settings
+  become: yes
+  command: "dconf update"
