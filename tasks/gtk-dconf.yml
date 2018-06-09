@@ -18,7 +18,7 @@
   become_user: "{{ general.user }}"
   dconf:
     key: /org/gnome/desktop/interface/gtk-theme
-    value: "'OSX-Arc-White-1.4.7'"
+    value: "'X-Arc-White-v1.4.9'"
     state: present
 
 - name: set gnome setting for gnome user theme
@@ -26,7 +26,7 @@
   become_user: "{{ general.user }}"
   dconf:
     key: /org/gnome/shell/extensions/user-theme/name
-    value: "'OSX-Arc-White-1.4.7'"
+    value: "'X-Arc-White-v1.4.9'"
     state: present
 
 - name: set gnome setting for gnome cursor theme
@@ -66,7 +66,7 @@
   become_user: "{{ general.user }}"
   dconf:
     key: /org/gnome/desktop/background/picture-uri
-    value: "'file:///usr/share/themes/OSX-Arc-White-1.4.7/extra/mountains.png'"
+    value: "'file:///usr/share/themes/X-Arc-White-v1.4.9/extra/mountains.png'"
     state: present
 
 - name: set gnome setting for extensions

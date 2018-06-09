@@ -2,13 +2,13 @@
 general:
   user: vagrant
 
-gtk_theme_ver: v1.4.7
+gtk_theme_ver: v1.4.9
 gtk_theme_name: OSX-Arc-White
 gtk_theme_fullname: "{{gtk_theme_name}}-{{gtk_theme_ver}}"
 gtk_theme_platform: linux-amd64
 gtk_theme_checksums:
-  v1.4.7:
-    linux-amd64: sha256:8b5e4f3f06c9bce0a060c18282b5e4b5410e471f864e560031b56ed761da38f5
+  v1.4.9:
+    linux-amd64: sha256:5425e36e2b96b28e2eca8f0b3280e141a7534163b6a5445e41c7006f82f7dfc4
 
 gtk_icon_ver: v2.1
 gtk_icon_name: Arc-OSC-Icons
@@ -16,7 +16,7 @@ gtk_icon_fullname: "{{gtk_icon_name}}-{{gtk_icon_ver}}"
 gtk_icon_platform: linux-amd64
 gtk_icon_checksums:
   v2.1:
-    linux-amd64: sha256:1040128c88ccba167984cac76018bb19ae41684ab467aa8551291a264fa35ba4
+    linux-amd64: sha256:1fef88f5630ee8d3a900b98e5b080939c1f9143afedcdab99f091307ceb867ad
 
 gtk_extension_ver: v62
 gtk_extension_uuid: dash-to-dock@micxgx.gmail.com

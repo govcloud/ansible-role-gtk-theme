@@ -11,7 +11,7 @@
     - name: download...
       become: yes
       get_url:
-        url: 'https://github.com/LinxGem33/Arc-OSX-Icons/archive/v2.1.tar.gz'
+        url: 'https://gitlab.com/LinxGem33/Arc-X-Icons/-/archive/v2.1/Arc-X-Icons-v2.1.tar.gz'
         dest: "/tmp/{{ gtk_icon_tgz }}"
         checksum: "{{ gtk_icon_checksum }}"
         mode: 0644
