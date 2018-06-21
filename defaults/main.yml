@@ -3,7 +3,7 @@ general:
   user: vagrant
 
 gtk_theme_ver: v1.4.9
-gtk_theme_name: OSX-Arc-White
+gtk_theme_name: X-Arc-White
 gtk_theme_fullname: "{{gtk_theme_name}}-{{gtk_theme_ver}}"
 gtk_theme_platform: linux-amd64
 gtk_theme_checksums:
